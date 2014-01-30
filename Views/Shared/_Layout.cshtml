@@ -3,6 +3,7 @@
 <head>
 
     <title>@ViewBag.Title</title>
+    <link href="~/Fonts/css/font-awesome.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-3.0.3.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.10.2.js"></script>
     <script src="~/Scripts/bootstrap-3.0.3.js"></script>
@@ -65,7 +66,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#"><i class="icon-search"></i>Linked Visualized</a>
+    <a class="navbar-brand" style="color:white" href="#">Linked Visualized</a>
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -73,15 +74,85 @@
         if (Session["username"] == null)
         {
             <ul class="nav navbar-nav pull-right">
-                <li><a href="#">Sign in</a></li>
-                <li><a href="home/signup">Sign up</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-sign-in"></i> &nbsp Sign In <strong class="caret"></strong></a>
+                    <div class="dropdown-menu" style="padding-left: 300px;padding-bottom: 15px;">
+                       <form role="form" style="margin-left:-280px;margin-right:20px" id="signin" onsubmit="return signin()">
+                          <div class="form-group">
+                            <label>Username</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-lg fa-fw"></i></span>
+                            <input required type="text" class="form-control" name="UserName" id="SUserName" placeholder="Username" onfocus="fadeoutSigninError()">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-unlock fa-lg fa-fw"></i></span>
+                                <input required type="password" class="form-control" name="Password" id="SPassword" placeholder="Password" onfocus="fadeoutSigninError()">
+                            </div>
+                          </div>
+                          <div class="checkbox">
+                            <label>
+                              <input type="checkbox"> Remember me
+                            </label>
+                          </div>
+                           <div class="alert alert-danger" id="signinError">
+                              <strong>Invalid &nbsp </strong> Username or Password.
+                            </div>
+                          <button type="submit" class="btn btn-success" style="width:49%">Sign in</button>
+                          <a href="#"><button type="button" class="btn btn-default" style="width:49%">Help</button></a>
+                        </form>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-sign-out"></i> &nbspSign Up <strong class="caret"></strong></a>
+                    <div class="dropdown-menu" style="padding-left: 300px;padding-bottom: 15px;">
+                       <form id="signup" onsubmit="return signup()" role="form" style="margin-left:-280px;margin-right:20px" >
+                          <div class="form-group">
+                            <label>Name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-male fa-fw fa-lg"></i></span>
+                            <input required type="text" class="form-control" name="Name" id="Name" placeholder="Name" onfocus="fadeoutSignupError()">
+                            </div>
+                          </div>
+                           <div class="form-group">
+                            <label>Username</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw fa-lg"></i></span>
+                            <input required type="text" class="form-control" name="UserName" id="UserName" placeholder="Username" onblur="checkAvailability()" onfocus="fadeoutSignupError()">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><b><i class="fa fa-key fa-fw fa-rotate-270 fa-lg"></i></b></span>
+                                <input required type="password" class="form-control" name="Password" id="Password" placeholder="Password" onfocus="fadeoutSignupError()">
+                            </div>
+                          </div>
+                           <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope fa-fw fa-lg"></i></span>
+                            <input required type="email" class="form-control" name="Email" id="Email" placeholder="Email" onfocus="fadeoutSignupError()">
+                            </div>
+                          </div>
+                           <div class="alert alert-danger" id="signupError">
+                              <strong>Invalid &nbsp </strong> Credentials ...
+                            </div>
+
+                          <button type="submit" class="btn btn-success" onsubmit="return signup()" style="width:49%">Sign up</button>
+                          <a href="#"><button type="button" class="btn btn-default" style="width:49%">Help</button></a>
+                        </form>
+                    </div>
+                </li>
             </ul>
         }
         else
         {
             <ul class="nav navbar-nav pull-right">
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span>&nbsp @Session["username"]</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-off"></span>&nbsp Sign off</a></li>
+                <li><a href="Account/signoff"><span class="glyphicon glyphicon-off"></span>&nbsp Sign off</a></li>
             </ul>
         } 
      }
@@ -94,17 +165,22 @@
     <div id="sidebar-content">
         <div id="sidebar-wrapper" >
             <ul class="sidebar-nav"  style="margin-top:50px">
-                <li class="sidebar-brand"><a href="#">
-                    <img style="height:84px;width:220px" src="Images/Logo.png" /></a>
+                <li class="sidebar-brand">
+                    <img style="height:84px;width:220px" src="Images/Logo.png" />
                 </li>
                 <br />
-                <li><a href="#"><span class="glyphicon glyphicon-home"></span>&nbsp &nbsp &nbsp &nbsp Home</a></li>
-                 <li><a href="#"><span class="glyphicon glyphicon-zoom-in"></span>&nbsp &nbsp &nbsp &nbsp Advance Search</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-eye-open"></span>&nbsp &nbsp &nbsp &nbsp Overview</a>
+                <li><a href="#"><span class="glyphicon glyphicon-home"></span>&nbsp &nbsp &nbsp &nbsp
+                     Home</a></li>
+                 <li><a href="#"><span class="glyphicon glyphicon-zoom-in"></span>&nbsp &nbsp &nbsp &nbsp
+                     Advance Search</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-eye-open"></span>&nbsp &nbsp &nbsp &nbsp
+                     Overview</a>
                 </li>
-                <li><a href="#"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp &nbsp &nbsp &nbsp About</a>
+                <li><a href="#"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp &nbsp &nbsp &nbsp 
+                     About</a>
                 </li>
-                <li><a href="#"><span class="glyphicon glyphicon-earphone"></span>&nbsp &nbsp &nbsp &nbsp Contact</a>
+                <li><a href="#"><span class="glyphicon glyphicon-earphone"></span>&nbsp &nbsp &nbsp &nbsp
+                     Contact</a>
                 </li>
             </ul>
         </div>
@@ -121,8 +197,9 @@
 <script>
 
     $(document).ready(function () {
-
         sidebar(1);
+        $('#signinError').hide();
+        $('#signupError').hide();
     });
     var pannels = 1;
 
@@ -159,6 +236,93 @@
             return sidebar(1);
         }
     });
+    function signin() {
+        return false;
+        //$('#signinError').show();
+    }
+    function fadeoutSigninError() {
+        $('#signinError').fadeOut(1000);
+    }
+
+    function fadeoutSignupError() {
+        $('#signupError').fadeOut(1000);
+    }
+    function checkAvailability() {
+        //RedBorderColor(event.target.id)
+        //$('#' + event.target.id).parents('.input-group').append('<i class="fa fa-envelope fa-fw fa-lg">');
+        var UserName = document.getElementById("UserName").value;
+        if (UserName.length < 1) {
+            RedBorderColor("UserName");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Account/CheckAvailability",
+            data: { 'UserName': UserName },
+            success: function (exist) {
+                if (!exist) {
+                    GreenBorderColor("UserName");
+                }
+                else {
+                    RedBorderColor("UserName");
+                }
+            },
+            error: function () {
+                alert("ERROR: can't connect to Server");
+            }
+        });
+    }
+    function RedBorderColor(id) {
+        document.getElementById(id).style.border = "1px solid #ff0000";
+    }
+    function GreenBorderColor(id) {
+        document.getElementById(id).style.border = "1px solid #00ff00";
+    }
+    function signup() {
+        $.ajax({
+            type: "POST",
+            url: "/account/createAccount",
+            data: $('#signup').serialize(),
+            success: function (json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+                else {
+                    for (var i = 0 ; i < json.list.length ; i++) {
+                        RedBorderColor(json.list[i]);
+                    }
+                    $('#signupError').show();
+                }
+            },
+            error: function () {
+                alert("ERROR: can't connect to Server");
+
+            }
+        });
+        return false;
+    }
+    function signin() {
+
+        $.ajax({
+            type: "POST",
+            url: "/account/verify",
+            data: $('#signin').serialize(),
+            success: function (json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+                else {
+                    RedBorderColor("SUserName");
+                    RedBorderColor("SPassword");
+                    $('#signinError').show();
+                }
+            },
+            error: function () {
+                alert("ERROR: can't connect to Server");
+            }
+        });
+        return false;
+    }
 </script>
 
     @RenderBody()
