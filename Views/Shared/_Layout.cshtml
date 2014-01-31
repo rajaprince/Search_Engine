@@ -44,7 +44,6 @@
          float: left;
          background-color: white;
      }
-
      #toggleSidebar {
          float: right;
          height: 100%;
@@ -100,13 +99,13 @@
                            <div class="alert alert-danger" id="signinError">
                               <strong>Invalid &nbsp </strong> Username or Password.
                             </div>
-                          <button type="submit" class="btn btn-success" style="width:49%">Sign in</button>
+                          <button type="submit" class="btn btn-success" style="width:49%"><i id="signinicon"></i>&nbsp Sign in</button>
                           <a href="#"><button type="button" class="btn btn-default" style="width:49%">Help</button></a>
                         </form>
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-sign-out"></i> &nbspSign Up <strong class="caret"></strong></a>
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-sign-out"></i> &nbsp Sign Up <strong class="caret"></strong></a>
                     <div class="dropdown-menu" style="padding-left: 300px;padding-bottom: 15px;">
                        <form id="signup" onsubmit="return signup()" role="form" style="margin-left:-280px;margin-right:20px" >
                           <div class="form-group">
@@ -141,7 +140,8 @@
                               <strong>Invalid &nbsp </strong> Credentials ...
                             </div>
 
-                          <button type="submit" class="btn btn-success" onsubmit="return signup()" style="width:49%">Sign up</button>
+                          <button type="submit" class="btn btn-success" onsubmit="return signup()" style="width:49%">
+                              <i id="signupicon"></i>&nbsp Sign up</button>
                           <a href="#"><button type="button" class="btn btn-default" style="width:49%">Help</button></a>
                         </form>
                     </div>
@@ -191,7 +191,7 @@
             <i class="glyphicon glyphicon-chevron-right" style="color:black;margin-left:5px"></i>
         </a>
         <img class="pull-right" style="margin-right:-40px;height:1000%;width:10px" src="~/Images/untitled.png" />
-        </div>
+    </div>
 </div>
     
 <script>
@@ -236,10 +236,6 @@
             return sidebar(1);
         }
     });
-    function signin() {
-        return false;
-        //$('#signinError').show();
-    }
     function fadeoutSigninError() {
         $('#signinError').fadeOut(1000);
     }
@@ -250,11 +246,13 @@
     function checkAvailability() {
         //RedBorderColor(event.target.id)
         //$('#' + event.target.id).parents('.input-group').append('<i class="fa fa-envelope fa-fw fa-lg">');
+
         var UserName = document.getElementById("UserName").value;
         if (UserName.length < 1) {
             RedBorderColor("UserName");
             return;
         }
+        $('#signupicon').addClass("fa fa-spinner fa-spin");
         $.ajax({
             type: "POST",
             url: "/Account/CheckAvailability",
@@ -266,6 +264,7 @@
                 else {
                     RedBorderColor("UserName");
                 }
+                $('#signupicon').removeClass("fa fa-spinner fa-spin");
             },
             error: function () {
                 alert("ERROR: can't connect to Server");
@@ -279,6 +278,7 @@
         document.getElementById(id).style.border = "1px solid #00ff00";
     }
     function signup() {
+        $('#signupicon').addClass("fa fa-spinner fa-spin");
         $.ajax({
             type: "POST",
             url: "/account/createAccount",
@@ -292,6 +292,7 @@
                         RedBorderColor(json.list[i]);
                     }
                     $('#signupError').show();
+                    $('#signupicon').removeClass("fa fa-spinner fa-spin");
                 }
             },
             error: function () {
@@ -302,7 +303,7 @@
         return false;
     }
     function signin() {
-
+        $('#signinicon').addClass("fa fa-spinner fa-spin");
         $.ajax({
             type: "POST",
             url: "/account/verify",
@@ -315,6 +316,7 @@
                     RedBorderColor("SUserName");
                     RedBorderColor("SPassword");
                     $('#signinError').show();
+                    $('#signinicon').removeClass("fa fa-spinner fa-spin");
                 }
             },
             error: function () {
